@@ -27,8 +27,12 @@ const pressableComponentLabel =
   'Pressable Component for making views pressable.';
 const refreshControlComponentLabel =
   'RefreshControl Adds pull-to-refresh support to a scrollview.';
+const scrollViewComponentLabel =
+  'ScrollView Component that enables scrolling through child components';
 const scrollViewSimpleExampleComponentLabel =
   'ScrollViewSimpleExample Component that enables scrolling through child components.';
+const scrollViewAnimatedComponentLabel =
+  'ScrollViewAnimated Component that is animated when ScrollView is offset.';
 
 type ComponentsScreenType = {
   buttonComponentLabelElement: string,
@@ -40,6 +44,8 @@ type ComponentsScreenType = {
   newAppScreenComponentLabelElement: string,
   pressableComponentLabelElement: string,
   refreshControlComponentLabelElement: string,
+  scrollViewComponentLabelElement: string,
+  scrollViewAnimatedComponentLabelElement: string,
   scrollViewSimpleExampleComponentLabelElement: string,
   checkButtonComponentIsDisplayed: () => Promise<boolean>,
   checkActivityIndicatorComponentIsDisplayed: () => Promise<boolean>,
@@ -50,6 +56,8 @@ type ComponentsScreenType = {
   checkNewAppScreenComponentIsDisplayed: () => Promise<boolean>,
   checkPressableComponentIsDisplayed: () => Promise<boolean>,
   checkRefreshControlComponentIsDisplayed: () => Promise<boolean>,
+  checkScrollViewComponentIsDisplayed: () => Promise<boolean>,
+  checkScrollViewAnimatedComponentIsDisplayed: () => Promise<boolean>,
   checkScrollViewSimpleExampleComponentIsDisplayed: () => Promise<boolean>,
   clickButtonComponent: () => Promise<void>,
   clickActivityIndicatorComponent: () => Promise<void>,
@@ -60,6 +68,8 @@ type ComponentsScreenType = {
   clickNewAppScreenComponent: () => Promise<void>,
   clickPressableComponent: () => Promise<void>,
   clickRefreshControlComponent: () => Promise<void>,
+  clickScrollViewComponent: () => Promise<void>,
+  clickScrollViewAnimatedComponent: () => Promise<void>,
   clickScrollViewSimpleExampleComponent: () => Promise<void>,
 };
 
@@ -100,6 +110,14 @@ export const ComponentsScreen: ComponentsScreenType = {
   refreshControlComponentLabelElement: Utils.platformSelect({
     ios: iOSLabel(refreshControlComponentLabel),
     android: `~${refreshControlComponentLabel}`,
+  }),
+  scrollViewComponentLabelElement: Utils.platformSelect({
+    ios: iOSLabel(scrollViewComponentLabel),
+    android: `~${scrollViewComponentLabel}`,
+  }),
+  scrollViewAnimatedComponentLabelElement: Utils.platformSelect({
+    ios: iOSLabel(scrollViewAnimatedComponentLabel),
+    android: `~${scrollViewAnimatedComponentLabel}`,
   }),
   scrollViewSimpleExampleComponentLabelElement: Utils.platformSelect({
     ios: iOSLabel(scrollViewSimpleExampleComponentLabel),
@@ -165,6 +183,20 @@ export const ComponentsScreen: ComponentsScreenType = {
       this.refreshControlComponentLabelElement,
     );
   },
+  checkScrollViewComponentIsDisplayed: async function (
+    this: ComponentsScreenType,
+  ): Promise<boolean> {
+    return await Utils.checkElementExistence(
+      this.scrollViewComponentLabelElement,
+    );
+  },
+  checkScrollViewAnimatedComponentIsDisplayed: async function (
+    this: ComponentsScreenType,
+  ): Promise<boolean> {
+    return await Utils.checkElementExistence(
+      this.scrollViewAnimatedComponentLabelElement,
+    );
+  },
   checkScrollViewSimpleExampleComponentIsDisplayed: async function (
     this: ComponentsScreenType,
   ): Promise<boolean> {
@@ -216,6 +248,16 @@ export const ComponentsScreen: ComponentsScreenType = {
     this: ComponentsScreenType,
   ): Promise<void> {
     await Utils.clickElement(this.refreshControlComponentLabelElement);
+  },
+  clickScrollViewComponent: async function (
+    this: ComponentsScreenType,
+  ): Promise<void> {
+    await Utils.clickElement(this.scrollViewComponentLabelElement);
+  },
+  clickScrollViewAnimatedComponent: async function (
+    this: ComponentsScreenType,
+  ): Promise<void> {
+    await Utils.clickElement(this.scrollViewAnimatedComponentLabelElement);
   },
   clickScrollViewSimpleExampleComponent: async function (
     this: ComponentsScreenType,
