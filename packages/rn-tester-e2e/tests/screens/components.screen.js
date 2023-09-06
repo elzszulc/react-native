@@ -33,6 +33,8 @@ const scrollViewSimpleExampleComponentLabel =
   'ScrollViewSimpleExample Component that enables scrolling through child components.';
 const scrollViewAnimatedComponentLabel =
   'ScrollViewAnimated Component that is animated when ScrollView is offset.';
+const sectionListComponentLabel =
+  'SectionList Performant, scrollable list of data.';
 
 type ComponentsScreenType = {
   buttonComponentLabelElement: string,
@@ -47,6 +49,7 @@ type ComponentsScreenType = {
   scrollViewComponentLabelElement: string,
   scrollViewAnimatedComponentLabelElement: string,
   scrollViewSimpleExampleComponentLabelElement: string,
+  sectionListComponentLabelElement: string,
   checkButtonComponentIsDisplayed: () => Promise<boolean>,
   checkActivityIndicatorComponentIsDisplayed: () => Promise<boolean>,
   checkKeyboardAvoidingViewComponentIsDisplayed: () => Promise<boolean>,
@@ -59,6 +62,7 @@ type ComponentsScreenType = {
   checkScrollViewComponentIsDisplayed: () => Promise<boolean>,
   checkScrollViewAnimatedComponentIsDisplayed: () => Promise<boolean>,
   checkScrollViewSimpleExampleComponentIsDisplayed: () => Promise<boolean>,
+  checkSectionListComponentIsDisplayed: () => Promise<boolean>,
   clickButtonComponent: () => Promise<void>,
   clickActivityIndicatorComponent: () => Promise<void>,
   clickKeyboardAvoidingViewComponent: () => Promise<void>,
@@ -71,6 +75,7 @@ type ComponentsScreenType = {
   clickScrollViewComponent: () => Promise<void>,
   clickScrollViewAnimatedComponent: () => Promise<void>,
   clickScrollViewSimpleExampleComponent: () => Promise<void>,
+  clickSectionListComponent: () => Promise<void>,
 };
 
 export const ComponentsScreen: ComponentsScreenType = {
@@ -122,6 +127,10 @@ export const ComponentsScreen: ComponentsScreenType = {
   scrollViewSimpleExampleComponentLabelElement: Utils.platformSelect({
     ios: iOSLabel(scrollViewSimpleExampleComponentLabel),
     android: `~${scrollViewSimpleExampleComponentLabel}`,
+  }),
+  sectionListComponentLabelElement: Utils.platformSelect({
+    ios: iOSLabel(sectionListComponentLabel),
+    android: `~${sectionListComponentLabel}`,
   }),
   // Methods to interact with top level elements in the list
   checkButtonComponentIsDisplayed: async function (
@@ -204,6 +213,13 @@ export const ComponentsScreen: ComponentsScreenType = {
       this.scrollViewSimpleExampleComponentLabelElement,
     );
   },
+  checkSectionListComponentIsDisplayed: async function (
+    this: ComponentsScreenType,
+  ): Promise<boolean> {
+    return await Utils.checkElementExistence(
+      this.sectionListComponentLabelElement,
+    );
+  },
   clickButtonComponent: async function (
     this: ComponentsScreenType,
   ): Promise<void> {
@@ -263,5 +279,10 @@ export const ComponentsScreen: ComponentsScreenType = {
     this: ComponentsScreenType,
   ): Promise<void> {
     await Utils.clickElement(this.scrollViewSimpleExampleComponentLabelElement);
+  },
+  clickSectionListComponent: async function (
+    this: ComponentsScreenType,
+  ): Promise<void> {
+    await Utils.clickElement(this.sectionListComponentLabelElement);
   },
 };
