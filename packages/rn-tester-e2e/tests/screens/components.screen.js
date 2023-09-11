@@ -35,6 +35,10 @@ const scrollViewAnimatedComponentLabel =
   'ScrollViewAnimated Component that is animated when ScrollView is offset.';
 const sectionListComponentLabel =
   'SectionList Performant, scrollable list of data.';
+const statusBarComponentLabel =
+  'StatusBar Component for controlling the status bar';
+const swipeableCardComponentLabel =
+  'SwipeableCard Example of a swipeable card with scrollable content to test PanResponder and JSResponderHandler interaction.';
 
 type ComponentsScreenType = {
   buttonComponentLabelElement: string,
@@ -50,6 +54,8 @@ type ComponentsScreenType = {
   scrollViewAnimatedComponentLabelElement: string,
   scrollViewSimpleExampleComponentLabelElement: string,
   sectionListComponentLabelElement: string,
+  statusBarComponentLabelElement: string,
+  swipeableCardComponentLabelElement: string,
   checkButtonComponentIsDisplayed: () => Promise<boolean>,
   checkActivityIndicatorComponentIsDisplayed: () => Promise<boolean>,
   checkKeyboardAvoidingViewComponentIsDisplayed: () => Promise<boolean>,
@@ -63,6 +69,8 @@ type ComponentsScreenType = {
   checkScrollViewAnimatedComponentIsDisplayed: () => Promise<boolean>,
   checkScrollViewSimpleExampleComponentIsDisplayed: () => Promise<boolean>,
   checkSectionListComponentIsDisplayed: () => Promise<boolean>,
+  checkStatusBarComponentIsDisplayed: () => Promise<boolean>,
+  checkSwipeableCardComponentIsDisplayed: () => Promise<boolean>,
   clickButtonComponent: () => Promise<void>,
   clickActivityIndicatorComponent: () => Promise<void>,
   clickKeyboardAvoidingViewComponent: () => Promise<void>,
@@ -76,6 +84,8 @@ type ComponentsScreenType = {
   clickScrollViewAnimatedComponent: () => Promise<void>,
   clickScrollViewSimpleExampleComponent: () => Promise<void>,
   clickSectionListComponent: () => Promise<void>,
+  clickStatusBarComponent: () => Promise<void>,
+  clickSwipeableCardComponent: () => Promise<void>,
 };
 
 export const ComponentsScreen: ComponentsScreenType = {
@@ -131,6 +141,14 @@ export const ComponentsScreen: ComponentsScreenType = {
   sectionListComponentLabelElement: Utils.platformSelect({
     ios: iOSLabel(sectionListComponentLabel),
     android: `~${sectionListComponentLabel}`,
+  }),
+  statusBarComponentLabelElement: Utils.platformSelect({
+    ios: iOSLabel(statusBarComponentLabel),
+    android: `~${statusBarComponentLabel}`,
+  }),
+  swipeableCardComponentLabelElement: Utils.platformSelect({
+    ios: iOSLabel(swipeableCardComponentLabel),
+    android: `~${swipeableCardComponentLabel}`,
   }),
   // Methods to interact with top level elements in the list
   checkButtonComponentIsDisplayed: async function (
@@ -220,6 +238,20 @@ export const ComponentsScreen: ComponentsScreenType = {
       this.sectionListComponentLabelElement,
     );
   },
+  checkStatusBarComponentIsDisplayed: async function (
+    this: ComponentsScreenType,
+  ): Promise<boolean> {
+    return await Utils.checkElementExistence(
+      this.statusBarComponentLabelElement,
+    );
+  },
+  checkSwipeableCardComponentIsDisplayed: async function (
+    this: ComponentsScreenType,
+  ): Promise<boolean> {
+    return await Utils.checkElementExistence(
+      this.swipeableCardComponentLabelElement,
+    );
+  },
   clickButtonComponent: async function (
     this: ComponentsScreenType,
   ): Promise<void> {
@@ -284,5 +316,15 @@ export const ComponentsScreen: ComponentsScreenType = {
     this: ComponentsScreenType,
   ): Promise<void> {
     await Utils.clickElement(this.sectionListComponentLabelElement);
+  },
+  clickStatusBarComponent: async function (
+    this: ComponentsScreenType,
+  ): Promise<void> {
+    await Utils.clickElement(this.statusBarComponentLabelElement);
+  },
+  clickSwipeableCardComponent: async function (
+    this: ComponentsScreenType,
+  ): Promise<void> {
+    await Utils.clickElement(this.swipeableCardComponentLabelElement);
   },
 };

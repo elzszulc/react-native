@@ -21,7 +21,7 @@ describe('Test is checking ScrollViewSimpleExample component', () => {
     ).toBeTruthy();
     await ComponentsScreen.clickScrollViewSimpleExampleComponent();
     expect(
-      await ScrollViewSimpleExampleComponentScreen.checkScrollViewItemsDisplayed(),
+      await ScrollViewSimpleExampleComponentScreen.checkScrollViewItemsAreDisplayed(),
     ).toBeTruthy();
   });
 });

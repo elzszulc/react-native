@@ -17,7 +17,7 @@ import {
 type ScrollViewSimpleExampleComponentScreenType = {
   scrollViewSimpleExampleScreenElement: string,
   scrollViewItemScreenElement: string,
-  checkScrollViewItemsDisplayed: () => Promise<boolean>,
+  checkScrollViewItemsAreDisplayed: () => Promise<boolean>,
   scrollUntilScrollViewSimpleExampleComponentIsDisplayed: () => Promise<void>,
 };
 
@@ -34,7 +34,7 @@ export const ScrollViewSimpleExampleComponentScreen: ScrollViewSimpleExampleComp
       android: androidWidget('TextView', 'resource-id', 'scroll_view_item'),
     }),
     // Methods to interact with the elements
-    checkScrollViewItemsDisplayed: async function (
+    checkScrollViewItemsAreDisplayed: async function (
       this: ScrollViewSimpleExampleComponentScreenType,
     ): Promise<boolean> {
       return await Utils.checkElementExistence(
