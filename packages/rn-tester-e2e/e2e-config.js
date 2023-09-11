@@ -23,8 +23,8 @@ let capabilities: Capabilities;
 
 const android = {
   platformName: 'Android',
-  'appium:platformVersion': '13.0',
-  'appium:deviceName': 'Pixel 2 API TiramistuPrivacySandbox',
+  'appium:platformVersion': '14.0',
+  'appium:deviceName': 'Android Emulator',
   'appium:app': path.join(process.cwd(), '/apps/rn-tester.apk'),
   'appium:automationName': 'UiAutomator2',
   'appium:newCommandTimeout': 240,
@@ -32,7 +32,7 @@ const android = {
 
 const ios = {
   platformName: 'iOS',
-  'appium:platformVersion': '16.1',
+  'appium:platformVersion': '16.4',
   'appium:deviceName': 'iPhone 14',
   'appium:automationName': 'XCUITest',
   'appium:app': path.join(process.cwd(), '/apps/rn-tester.app'),
