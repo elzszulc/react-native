@@ -14,7 +14,7 @@ const {
 } = require('../../screens/components/sectionListComponent.screen.js');
 
 describe('Test is checking SectionList OnEndReached component', () => {
-  test('Should view test button element', async () => {
+  test('Should view test button', async () => {
     await SectionListComponentScreen.scrollUntilSectionListComponentIsDisplayed();
     expect(
       await ComponentsScreen.checkSectionListComponentIsDisplayed(),
@@ -65,7 +65,7 @@ describe('Test is checking SectionList With Separators component', () => {
 });
 
 describe('Test is checking SectionList Sticky Headers Enabled component', () => {
-  test('Should view Sticky On button element', async () => {
+  test('Should view Sticky On button', async () => {
     await SectionListComponentScreen.scrollUntilSectionListComponentIsDisplayed();
     expect(
       await ComponentsScreen.checkSectionListComponentIsDisplayed(),
@@ -82,7 +82,7 @@ describe('Test is checking SectionList Sticky Headers Enabled component', () => 
 });
 
 describe('Test is checking SectionList Inverted component', () => {
-  test('Should view the last element', async () => {
+  test('Should view the ice cream element', async () => {
     await SectionListComponentScreen.scrollUntilSectionListComponentIsDisplayed();
     expect(
       await ComponentsScreen.checkSectionListComponentIsDisplayed(),

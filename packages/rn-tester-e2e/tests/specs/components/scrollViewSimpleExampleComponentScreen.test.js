@@ -14,7 +14,7 @@ const {
 } = require('../../screens/components/scrollViewSimpleExampleComponent.screen.js');
 
 describe('Test is checking ScrollViewSimpleExample component', () => {
-  test('Should view scroll view item element', async () => {
+  test('Should view scroll view elements', async () => {
     await ScrollViewSimpleExampleComponentScreen.scrollUntilScrollViewSimpleExampleComponentIsDisplayed();
     expect(
       await ComponentsScreen.checkScrollViewSimpleExampleComponentIsDisplayed(),

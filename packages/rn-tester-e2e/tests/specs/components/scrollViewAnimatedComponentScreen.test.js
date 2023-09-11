@@ -14,7 +14,7 @@ const {
 } = require('../../screens/components/scrollViewAnimatedComponent.screen.js');
 
 describe('Test is checking ScrollView component', () => {
-  test('Should view scroll view item element', async () => {
+  test('Should view scroll me horizonally button', async () => {
     await ScrollViewAnimatedComponentScreen.scrollUntilScrollViewAnimatedComponentIsDisplayed();
     expect(
       await ComponentsScreen.checkScrollViewAnimatedComponentIsDisplayed(),

@@ -55,6 +55,14 @@ type SectionListComponentScreenType = {
   scrollUntilSectionListScrollableComponentIsDisplayed: () => Promise<void>,
 };
 
+const conentInsetText = 'SectionList Content Inset';
+const onViewableItemsChangedText = 'SectionList Content Inset';
+const onEndReachedText = 'SectionList onEndReached';
+const withSeparatorsText = 'SectionList With Separators';
+const stickyHeadersEnabledText = 'SectionList Sticky Headers Enabled';
+const invertedText = 'SectionList Inverted';
+const scrollableText = 'SectionList scrollable';
+
 export const SectionListComponentScreen: SectionListComponentScreenType = {
   // reference in the Components list
   sectionListScreenElement: Utils.platformSelect({
@@ -63,40 +71,32 @@ export const SectionListComponentScreen: SectionListComponentScreenType = {
   }),
   // References to elements within the SectionList Component screen
   sectionListContentInsetScreenElement: Utils.platformSelect({
-    ios: iOSName('SectionList Content Inset'),
-    android: androidWidget('TextView', 'text', 'SectionList Content Inset'),
+    ios: iOSName(conentInsetText),
+    android: androidWidget('TextView', 'text', conentInsetText),
   }),
   sectionListOnEndReachedScreenElement: Utils.platformSelect({
-    ios: iOSName('SectionList onEndReached'),
-    android: androidWidget('TextView', 'text', 'SectionList onEndReached'),
+    ios: iOSName(onEndReachedText),
+    android: androidWidget('TextView', 'text', onEndReachedText),
   }),
   sectionListOnViewableItemsChangedScreenElement: Utils.platformSelect({
-    ios: iOSName('SectionList On Viewable Items Changed'),
-    android: androidWidget(
-      'TextView',
-      'text',
-      'SectionList On Viewable Items Changed',
-    ),
+    ios: iOSName(onViewableItemsChangedText),
+    android: androidWidget('TextView', 'text', onViewableItemsChangedText),
   }),
   sectionListWithSeparatorsScreenElement: Utils.platformSelect({
-    ios: iOSName('SectionList With Separators'),
-    android: androidWidget('TextView', 'text', 'SectionList With Separators'),
+    ios: iOSName(withSeparatorsText),
+    android: androidWidget('TextView', 'text', withSeparatorsText),
   }),
   sectionListStickyHeadersEnabledScreenElement: Utils.platformSelect({
-    ios: iOSName('SectionList Sticky Headers Enabled'),
-    android: androidWidget(
-      'TextView',
-      'text',
-      'SectionList Sticky Headers Enabled',
-    ),
+    ios: iOSName(stickyHeadersEnabledText),
+    android: androidWidget('TextView', 'text', stickyHeadersEnabledText),
   }),
   sectionListInvertedScreenElement: Utils.platformSelect({
-    ios: iOSName('SectionList Inverted'),
-    android: androidWidget('TextView', 'text', 'SectionList Inverted'),
+    ios: iOSName(invertedText),
+    android: androidWidget('TextView', 'text', invertedText),
   }),
   sectionListScrollableScreenElement: Utils.platformSelect({
-    ios: iOSName('SectionList scrollable'),
-    android: androidWidget('TextView', 'text', 'SectionList scrollable'),
+    ios: iOSName(scrollableText),
+    android: androidWidget('TextView', 'text', scrollableText),
   }),
   btnTestElement: Utils.platformSelect({
     ios: iOSName('start_test'),

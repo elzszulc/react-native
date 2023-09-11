@@ -16,7 +16,7 @@ const {
 const hiddenFalseText = 'hidden: false';
 
 describe('Test is checking SwipeableCard component', () => {
-  test('Should view the last section element', async () => {
+  test('Should view the hidden false text element', async () => {
     await StatusBarComponentScreen.scrollUntilStatusBarComponentIsDisplayed();
     expect(
       await ComponentsScreen.checkStatusBarComponentIsDisplayed(),
