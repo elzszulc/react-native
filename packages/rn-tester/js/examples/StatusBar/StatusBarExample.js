@@ -73,7 +73,9 @@ class StatusBarHiddenExample extends React.Component<{...}, $FlowFixMeState> {
           style={styles.wrapper}
           onPress={this._onChangeHidden}>
           <View style={styles.button}>
-            <Text>hidden: {this.state.hidden ? 'true' : 'false'}</Text>
+            <Text testID="status_bar_hidden_button">
+              hidden: {this.state.hidden ? 'true' : 'false'}
+            </Text>
           </View>
         </TouchableHighlight>
         <TouchableHighlight

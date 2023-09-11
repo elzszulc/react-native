@@ -27,7 +27,9 @@ const Separator =
           styles.separator,
           {backgroundColor: highlighted ? highlightColor : defaultColor},
         ]}>
-        <Text style={styles.separatorText}>{text}</Text>
+        <Text testID="section_list_separator_text" style={styles.separatorText}>
+          {text}
+        </Text>
       </View>
     );
   };
