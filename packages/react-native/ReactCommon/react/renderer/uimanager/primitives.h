@@ -13,8 +13,10 @@
 #include <react/debug/react_native_assert.h>
 #include <react/renderer/components/text/RawTextShadowNode.h>
 #include <react/renderer/core/EventHandler.h>
+#include <react/renderer/core/LayoutMetrics.h>
 #include <react/renderer/core/ShadowNode.h>
 #include <react/renderer/core/TraitCast.h>
+#include <react/renderer/graphics/Rect.h>
 #include <react/utils/CoreFeatures.h>
 
 namespace facebook::react {
@@ -218,5 +220,40 @@ inline static void getTextContentInShadowNode(
   for (const auto& childNode : shadowNode.getChildren()) {
     getTextContentInShadowNode(*childNode.get(), result);
   }
+}
+
+inline static Rect getScrollableContentBounds(
+    Rect contentBounds,
+    LayoutMetrics layoutMetrics) {
+  auto paddingFrame = layoutMetrics.getPaddingFrame();
+
+  auto paddingBottom =
+      layoutMetrics.contentInsets.bottom - layoutMetrics.borderWidth.bottom;
+  auto paddingLeft =
+      layoutMetrics.contentInsets.left - layoutMetrics.borderWidth.left;
+  auto paddingRight =
+      layoutMetrics.contentInsets.right - layoutMetrics.borderWidth.right;
+
+  auto minY = paddingFrame.getMinY();
+  auto maxY =
+      std::max(paddingFrame.getMaxY(), contentBounds.getMaxY() + paddingBottom);
+
+  auto minX = layoutMetrics.layoutDirection == LayoutDirection::RightToLeft
+      ? std::min(paddingFrame.getMinX(), contentBounds.getMinX() - paddingLeft)
+      : paddingFrame.getMinX();
+  auto maxX = layoutMetrics.layoutDirection == LayoutDirection::RightToLeft
+      ? paddingFrame.getMaxX()
+      : std::max(
+            paddingFrame.getMaxX(), contentBounds.getMaxX() + paddingRight);
+
+  return Rect{Point{minX, minY}, Size{maxX - minX, maxY - minY}};
+}
+
+inline static Size getScrollSize(
+    LayoutMetrics layoutMetrics,
+    Rect contentBounds) {
+  auto scrollableContentBounds =
+      getScrollableContentBounds(contentBounds, layoutMetrics);
+  return scrollableContentBounds.size;
 }
 } // namespace facebook::react
