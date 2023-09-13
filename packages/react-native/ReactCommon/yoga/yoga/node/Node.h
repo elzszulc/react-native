@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <vector>
 
+#include <yoga/Yoga.h>
+
 #include <yoga/config/Config.h>
 #include <yoga/node/LayoutResults.h>
 #include <yoga/style/CompactValue.h>
@@ -28,50 +30,29 @@ struct NodeFlags {
   bool isReferenceBaseline : 1;
   bool isDirty : 1;
   uint32_t nodeType : 1;
-  bool measureUsesContext : 1;
-  bool baselineUsesContext : 1;
-  bool printUsesContext : 1;
 };
 #pragma pack(pop)
 
-class YOGA_EXPORT Node : public ::YGNode {
-public:
-  using MeasureWithContextFn =
-      YGSize (*)(YGNode*, float, YGMeasureMode, float, YGMeasureMode, void*);
-  using BaselineWithContextFn = float (*)(YGNode*, float, float, void*);
-  using PrintWithContextFn = void (*)(YGNode*, void*);
-
+class YG_EXPORT Node : public ::YGNode {
 private:
   void* context_ = nullptr;
   NodeFlags flags_ = {};
-  union {
-    YGMeasureFunc noContext;
-    MeasureWithContextFn withContext;
-  } measure_ = {nullptr};
-  union {
-    YGBaselineFunc noContext;
-    BaselineWithContextFn withContext;
-  } baseline_ = {nullptr};
-  union {
-    YGPrintFunc noContext;
-    PrintWithContextFn withContext;
-  } print_ = {nullptr};
-  YGDirtiedFunc dirtied_ = nullptr;
+  YGMeasureFunc measureFunc_ = {nullptr};
+  YGBaselineFunc baselineFunc_ = {nullptr};
+  YGPrintFunc printFunc_ = {nullptr};
+  YGDirtiedFunc dirtiedFunc_ = nullptr;
   Style style_ = {};
   LayoutResults layout_ = {};
-  uint32_t lineIndex_ = 0;
+  size_t lineIndex_ = 0;
   Node* owner_ = nullptr;
   std::vector<Node*> children_ = {};
-  Config* config_;
+  const Config* config_;
   std::array<YGValue, 2> resolvedDimensions_ = {
       {YGValueUndefined, YGValueUndefined}};
 
   FloatOptional relativePosition(
       const YGFlexDirection axis,
       const float axisSize) const;
-
-  void setMeasureFunc(decltype(measure_));
-  void setBaselineFunc(decltype(baseline_));
 
   void useWebDefaults() {
     style_.flexDirection() = YGFlexDirectionRow;
@@ -86,10 +67,8 @@ private:
   Node& operator=(Node&&) = default;
 
 public:
-  Node() : Node{static_cast<Config*>(YGConfigGetDefault())} {
-    flags_.hasNewLayout = true;
-  }
-  explicit Node(Config* config);
+  Node();
+  explicit Node(const Config* config);
   ~Node() = default; // cleanup of owner/children relationships in YGNodeFree
 
   Node(Node&&);
@@ -105,7 +84,7 @@ public:
   // Getters
   void* getContext() const { return context_; }
 
-  void print(void*);
+  void print();
 
   bool getHasNewLayout() const { return flags_.hasNewLayout; }
 
@@ -113,19 +92,17 @@ public:
     return static_cast<YGNodeType>(flags_.nodeType);
   }
 
-  bool hasMeasureFunc() const noexcept { return measure_.noContext != nullptr; }
+  bool hasMeasureFunc() const noexcept { return measureFunc_ != nullptr; }
 
-  YGSize measure(float, YGMeasureMode, float, YGMeasureMode, void*);
+  YGSize measure(float, YGMeasureMode, float, YGMeasureMode);
 
-  bool hasBaselineFunc() const noexcept {
-    return baseline_.noContext != nullptr;
-  }
+  bool hasBaselineFunc() const noexcept { return baselineFunc_ != nullptr; }
 
-  float baseline(float width, float height, void* layoutContext) const;
+  float baseline(float width, float height) const;
 
   bool hasErrata(YGErrata errata) const { return config_->hasErrata(errata); }
 
-  YGDirtiedFunc getDirtied() const { return dirtied_; }
+  YGDirtiedFunc getDirtiedFunc() const { return dirtiedFunc_; }
 
   // For Performance reasons passing as reference.
   Style& getStyle() { return style_; }
@@ -137,9 +114,9 @@ public:
 
   const LayoutResults& getLayout() const { return layout_; }
 
-  uint32_t getLineIndex() const { return lineIndex_; }
+  size_t getLineIndex() const { return lineIndex_; }
 
-  bool isReferenceBaseline() { return flags_.isReferenceBaseline; }
+  bool isReferenceBaseline() const { return flags_.isReferenceBaseline; }
 
   // returns the Node that owns this Node. An owner is used to identify
   // the YogaTree that a Node belongs to. This method will return the parent
@@ -152,28 +129,11 @@ public:
 
   const std::vector<Node*>& getChildren() const { return children_; }
 
-  // Applies a callback to all children, after cloning them if they are not
-  // owned.
-  template <typename T>
-  void iterChildrenAfterCloningIfNeeded(T callback, void* cloneContext) {
-    int i = 0;
-    for (Node*& child : children_) {
-      if (child->getOwner() != this) {
-        child = static_cast<Node*>(
-            config_->cloneNode(child, this, i, cloneContext));
-        child->setOwner(this);
-      }
-      i += 1;
-
-      callback(child, cloneContext);
-    }
-  }
-
   Node* getChild(size_t index) const { return children_.at(index); }
 
   size_t getChildCount() const { return children_.size(); }
 
-  Config* getConfig() const { return config_; }
+  const Config* getConfig() const { return config_; }
 
   bool isDirty() const { return flags_.isDirty; }
 
@@ -242,15 +202,7 @@ public:
 
   void setContext(void* context) { context_ = context; }
 
-  void setPrintFunc(YGPrintFunc printFunc) {
-    print_.noContext = printFunc;
-    flags_.printUsesContext = false;
-  }
-  void setPrintFunc(PrintWithContextFn printFunc) {
-    print_.withContext = printFunc;
-    flags_.printUsesContext = true;
-  }
-  void setPrintFunc(std::nullptr_t) { setPrintFunc(YGPrintFunc{nullptr}); }
+  void setPrintFunc(YGPrintFunc printFunc) { printFunc_ = printFunc; }
 
   void setHasNewLayout(bool hasNewLayout) {
     flags_.hasNewLayout = hasNewLayout;
@@ -261,30 +213,18 @@ public:
   }
 
   void setMeasureFunc(YGMeasureFunc measureFunc);
-  void setMeasureFunc(MeasureWithContextFn);
-  void setMeasureFunc(std::nullptr_t) {
-    return setMeasureFunc(YGMeasureFunc{nullptr});
-  }
 
   void setBaselineFunc(YGBaselineFunc baseLineFunc) {
-    flags_.baselineUsesContext = false;
-    baseline_.noContext = baseLineFunc;
-  }
-  void setBaselineFunc(BaselineWithContextFn baseLineFunc) {
-    flags_.baselineUsesContext = true;
-    baseline_.withContext = baseLineFunc;
-  }
-  void setBaselineFunc(std::nullptr_t) {
-    return setBaselineFunc(YGBaselineFunc{nullptr});
+    baselineFunc_ = baseLineFunc;
   }
 
-  void setDirtiedFunc(YGDirtiedFunc dirtiedFunc) { dirtied_ = dirtiedFunc; }
+  void setDirtiedFunc(YGDirtiedFunc dirtiedFunc) { dirtiedFunc_ = dirtiedFunc; }
 
   void setStyle(const Style& style) { style_ = style; }
 
   void setLayout(const LayoutResults& layout) { layout_ = layout; }
 
-  void setLineIndex(uint32_t lineIndex) { lineIndex_ = lineIndex; }
+  void setLineIndex(size_t lineIndex) { lineIndex_ = lineIndex; }
 
   void setIsReferenceBaseline(bool isReferenceBaseline) {
     flags_.isReferenceBaseline = isReferenceBaseline;
@@ -335,12 +275,20 @@ public:
   bool removeChild(Node* child);
   void removeChild(size_t index);
 
-  void cloneChildrenIfNeeded(void*);
+  void cloneChildrenIfNeeded();
   void markDirtyAndPropagate();
   float resolveFlexGrow() const;
   float resolveFlexShrink() const;
   bool isNodeFlexible();
   void reset();
 };
+
+inline Node* resolveRef(const YGNodeRef ref) {
+  return static_cast<Node*>(ref);
+}
+
+inline const Node* resolveRef(const YGNodeConstRef ref) {
+  return static_cast<const Node*>(ref);
+}
 
 } // namespace facebook::yoga

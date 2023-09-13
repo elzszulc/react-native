@@ -48,7 +48,7 @@ struct LayoutData {
 
 const char* LayoutPassReasonToString(const LayoutPassReason value);
 
-struct YOGA_EXPORT Event {
+struct YG_EXPORT Event {
   enum Type {
     NodeAllocation,
     NodeDeallocation,
@@ -95,28 +95,21 @@ private:
 
 template <>
 struct Event::TypedData<Event::NodeAllocation> {
-  YGConfigRef config;
+  YGConfigConstRef config;
 };
 
 template <>
 struct Event::TypedData<Event::NodeDeallocation> {
-  YGConfigRef config;
-};
-
-template <>
-struct Event::TypedData<Event::LayoutPassStart> {
-  void* layoutContext;
+  YGConfigConstRef config;
 };
 
 template <>
 struct Event::TypedData<Event::LayoutPassEnd> {
-  void* layoutContext;
   LayoutData* layoutData;
 };
 
 template <>
 struct Event::TypedData<Event::MeasureCallbackEnd> {
-  void* layoutContext;
   float width;
   YGMeasureMode widthMeasureMode;
   float height;
@@ -129,7 +122,6 @@ struct Event::TypedData<Event::MeasureCallbackEnd> {
 template <>
 struct Event::TypedData<Event::NodeLayout> {
   LayoutType layoutType;
-  void* layoutContext;
 };
 
 } // namespace facebook::yoga
